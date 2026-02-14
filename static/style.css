@@ -1,0 +1,178 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f0f0f;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 520px;
+    margin: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+
+.input-group {
+    margin-bottom: 24px;
+}
+
+#url {
+    width: 100%;
+    padding: 14px 18px;
+    background: #0f0f0f;
+    border: 1px solid #333;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#url:focus {
+    border-color: #ff4444;
+}
+
+#url::placeholder {
+    color: #555;
+}
+
+.format-group {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 28px;
+}
+
+.format-option {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.format-option input[type="radio"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #444;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s;
+}
+
+.format-option input[type="radio"]:checked {
+    border-color: #ff4444;
+}
+
+.format-option input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    height: 8px;
+    background: #ff4444;
+    border-radius: 50%;
+}
+
+.format-label {
+    font-size: 14px;
+    color: #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: #ff4444;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+}
+
+button:hover {
+    background: #e03030;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+    color: #aaa;
+    font-size: 14px;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #333;
+    border-top-color: #ff4444;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error {
+    margin-top: 20px;
+    padding: 12px 16px;
+    background: rgba(255, 68, 68, 0.1);
+    border: 1px solid rgba(255, 68, 68, 0.3);
+    border-radius: 8px;
+    color: #ff6666;
+    font-size: 14px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 32px 24px;
+        margin: 16px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}

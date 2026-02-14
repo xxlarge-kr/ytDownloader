@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Downloader</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Downloader</h1>
+        <p class="subtitle">YouTube 영상을 MP4 또는 MP3로 다운로드하세요</p>
+
+        <div class="input-group">
+            <input
+                type="text"
+                id="url"
+                placeholder="YouTube URL을 입력하세요"
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="format-group">
+            <label class="format-option">
+                <input type="radio" name="format" value="mp4" checked>
+                <span class="format-label">MP4 영상</span>
+            </label>
+            <label class="format-option">
+                <input type="radio" name="format" value="mp3">
+                <span class="format-label">MP3 음성</span>
+            </label>
+        </div>
+
+        <button id="downloadBtn" onclick="startDownload()">다운로드</button>
+
+        <div id="status" class="status hidden">
+            <div class="spinner"></div>
+            <span id="statusText">다운로드 중...</span>
+        </div>
+
+        <div id="error" class="error hidden"></div>
+    </div>
+
+    <script>
+        async function startDownload() {
+            const url = document.getElementById('url').value.trim();
+            const format = document.querySelector('input[name="format"]:checked').value;
+            const btn = document.getElementById('downloadBtn');
+            const status = document.getElementById('status');
+            const statusText = document.getElementById('statusText');
+            const error = document.getElementById('error');
+
+            error.classList.add('hidden');
+            error.textContent = '';
+
+            if (!url) {
+                showError('URL을 입력해주세요.');
+                return;
+            }
+
+            btn.disabled = true;
+            status.classList.remove('hidden');
+            statusText.textContent = '다운로드 준비 중...';
+
+            try {
+                const response = await fetch('/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url, format }),
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || '다운로드에 실패했습니다.');
+                }
+
+                statusText.textContent = '파일 저장 중...';
+
+                const disposition = response.headers.get('Content-Disposition');
+                let filename = `download.${format}`;
+                if (disposition) {
+                    const match = disposition.match(/filename\*?=(?:UTF-8'')?["']?([^"';\n]+)/i);
+                    if (match) filename = decodeURIComponent(match[1]);
+                }
+
+                const blob = await response.blob();
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(a.href);
+
+                statusText.textContent = '완료!';
+                setTimeout(() => status.classList.add('hidden'), 2000);
+            } catch (err) {
+                showError(err.message);
+                status.classList.add('hidden');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function showError(msg) {
+            const error = document.getElementById('error');
+            error.textContent = msg;
+            error.classList.remove('hidden');
+        }
+
+        document.getElementById('url').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') startDownload();
+        });
+    </script>
+</body>
+</html>
